@@ -1,5 +1,6 @@
 
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,7 +41,7 @@ class _PhotosListState extends State<PhotosList> {
       title: title,
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white30,
+          backgroundColor: Colors.white12,
           title: Text('Gallery'),
           actions: <Widget>[
             IconButton(
@@ -59,8 +60,7 @@ class _PhotosListState extends State<PhotosList> {
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
           itemCount: gallery.length,
           itemBuilder: (BuildContext context, int index) {
-            final photo = gallery[index];
-            return _photoCard(photo);
+            return _photoCard(index);
           },
         ),
         backgroundColor: Colors.white70,
@@ -68,11 +68,11 @@ class _PhotosListState extends State<PhotosList> {
     );
   }
 
-  Widget _photoCard(photo) {
+  Widget _photoCard(index) {
     return new Container(
       margin: EdgeInsets.all(6.0),
       decoration: BoxDecoration(
-        image: DecorationImage(image: photo, fit: BoxFit.fill),
+        image: DecorationImage(image: gallery[index], fit: BoxFit.fill),
 
         borderRadius: BorderRadius.circular(15),
         color: Colors.white70,
@@ -80,9 +80,60 @@ class _PhotosListState extends State<PhotosList> {
           BoxShadow(color: Colors.black26, blurRadius: 2.0, spreadRadius: 2.0),
         ],
       ),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => DetailedPhoto(gallery[index])));
+          setState(() {
+            
+          });
+        },
+      ),
     );
   }
 
 }
 
 
+class DetailedPhoto extends StatefulWidget {
+
+  final FileImage image;
+
+  DetailedPhoto(this.image);
+
+  @override
+  _DetailedPhotoState createState() {
+    return _DetailedPhotoState(image);
+  }
+}
+
+class _DetailedPhotoState extends State<DetailedPhoto> {
+
+  final FileImage image;
+
+  _DetailedPhotoState(this.image);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white12,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.delete_forever,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(image: image, fit: BoxFit.fitHeight),
+        ),
+      ),
+    );
+  }
+
+}
